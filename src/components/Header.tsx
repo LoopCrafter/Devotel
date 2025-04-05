@@ -1,6 +1,7 @@
-import { ThemeToggle } from "@/shared/components";
+
 import { FC } from "react";
 import { Link } from "react-router-dom";
+import { ThemeToggle } from "./shared";
 
 export const Header: FC = () => {
   

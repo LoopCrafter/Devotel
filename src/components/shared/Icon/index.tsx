@@ -1,5 +1,5 @@
 import { SVGProps } from "react";
-import { Sun, Moon } from "@/icons";
+import { Sun, Moon } from "@/components/icons";
 type IconName = "sun" | "moon";
 
 interface IconProps extends SVGProps<SVGSVGElement> {
