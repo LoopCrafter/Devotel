@@ -3,7 +3,7 @@
 import { FC, useEffect } from 'react'
 import { Icon } from '../Icon';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { toggleTheme } from '@/store/features';
+import { toggleTheme } from '@/store/slices';
 
 export const ThemeToggle:FC = () => {
     const dispatch = useAppDispatch()
