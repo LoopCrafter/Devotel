@@ -1,5 +1,6 @@
+import { FC } from "react";
 
-export const FormPage = () => {
+export const FormPage:FC = () => {
   return (
     <div>FormPage</div>
   )
