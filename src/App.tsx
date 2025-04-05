@@ -1,12 +1,12 @@
 import { FormPage, ApplicationsPage, NotFound } from "@/routes";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Header } from "@/components";
+import { Header } from "@/components/shared";
 function App() {
   return (
     <>
       <Router>
         <Header />
-        <div className="container mx-auto p-4">
+        <div className=" p-4 dark:dark:bg-dark-surface/98 min-h-screen">
           <Routes>
             <Route path="/" element={<FormPage />} />
             <Route path="/applications" element={<ApplicationsPage />} />

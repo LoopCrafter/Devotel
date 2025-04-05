@@ -1,13 +1,13 @@
 
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import { ThemeToggle } from "./shared";
+import { ThemeToggle } from "../ThemeToggle";
 
 export const Header: FC = () => {
   
 
   return (
-    <nav className="bg-blue-500 dark:bg-black p-4 flex justify-between items-center">
+    <nav className="bg-blue-500 dark:bg-dark-surface  dark:bg-black p-4 flex justify-between items-center">
       <ul className="flex space-x-4">
         <li>
           <Link to="/" className="text-white hover:text-gray-300">
