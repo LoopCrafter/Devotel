@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { FormField, VisibilityCondition, FieldType } from '@/types/form';
+import { FormField, FieldType, VisibilityCondition } from '@/types/form';
 import { TextField } from './TextField';
 import { SelectField } from './SelectField';
 import { RadioField } from './RadioField';
@@ -32,16 +32,18 @@ export const FieldRenderer = ({ field, dynamicOptions = {} }: Props) => {
 
   if (!isVisible()) return null;
 
+  const selectOptions = field.dynamicOptions ? dynamicOptions[field.id] || [] : field.options || [];
+
   switch (field.type) {
     case FieldType.Text:
     case FieldType.Date:
       return <TextField field={field} />;
     case FieldType.Select:
-      return <SelectField field={field} options={field.options || dynamicOptions[field.id] || []} />;
+      return <SelectField field={field} options={selectOptions} />;
     case FieldType.Radio:
       return <RadioField field={field} />;
     case FieldType.Group:
-      return <GroupField field={field} />;
+      return <GroupField field={field} dynamicOptions={dynamicOptions} />;
     case FieldType.Number:
       return <NumberField field={field} />;
     case FieldType.Checkbox:

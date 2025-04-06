@@ -1,7 +1,6 @@
 import { FormSchema } from '@/types/form';
 import { useForm, FormProvider } from 'react-hook-form';
-import axios from 'axios';
-import { useDynamicOptions } from '@/hooks';
+import { useDynamicOptions } from '@/hooks/useDynamicOptions';
 import { FieldRenderer } from '../form-fields/FieldRenderer';
 
 type Props = { schema: FormSchema };
@@ -13,9 +12,9 @@ export const DynamicForm = ({ schema }: Props) => {
   const dynamicOptions = useDynamicOptions(schema.fields, watchedValues);
 
   const onSubmit = async (data: any) => {
-    console.log(data)
     try {
-       alert('Form submitted successfully!');
+      console.log(` Sending Form ${schema.formId}`, data);
+      alert('Form submitted successfully!');
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error submitting form!');
@@ -28,7 +27,11 @@ export const DynamicForm = ({ schema }: Props) => {
         <h2 className="mb-6 text-2xl font-bold text-gray-800">{schema.title}</h2>
         <div className="space-y-4">
           {schema.fields.map((field) => (
-            <FieldRenderer key={field.id} field={field} dynamicOptions={dynamicOptions} />
+            <FieldRenderer
+              key={field.id}
+              field={field}
+              dynamicOptions={dynamicOptions}
+            />
           ))}
         </div>
         <button
