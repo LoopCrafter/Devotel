@@ -1,54 +1,40 @@
-# React + TypeScript + Vite
+# Applications Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application built with React and Vite to manage application data, featuring a dynamic form builder and an interactive applications table with search, sort, and pagination capabilities.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Dynamic Form Builder:** Create and render customizable forms with dynamic fields, including text inputs, selects with API-driven options, and nested groups.
+- **Search:** Filter applications by any field using a real-time search input.
+- **Sort:** Sort table columns in ascending or descending order with a single click.
+- **Pagination:** Navigate through data with a paginated table (2 items per page by default).
+- **Dark Mode:** Responsive design with Tailwind CSS, supporting light and dark themes.
+- **Fast Development:** Powered by Vite for quick builds and hot module replacement.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React**: Frontend library for building UI components.
+- **Vite**: Next-generation build tool for fast development and optimized production builds.
+- **TypeScript**: Static typing for better code quality and maintainability.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Axios**: HTTP client for fetching data from the API.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Getting Started
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Prerequisites
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Node.js (v18+ recommended)
+- npm or yarn
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/LoopCrafter/Devotel.git
+   cd Devotel
+2. Install dependencies:
+   ```bash  
+   npm install
+3. Run the development server:
+   ```bash
+   npm run dev
