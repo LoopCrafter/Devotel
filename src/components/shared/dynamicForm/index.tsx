@@ -13,7 +13,7 @@ export const DynamicForm = ({ schema }: Props) => {
 
   const onSubmit = async (data: any) => {
     try {
-      console.log(` Sending Form ${schema.formId}`, data);
+      console.log(`Sending Form ${schema.formId}`, data);
       alert('Form submitted successfully!');
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -31,6 +31,7 @@ export const DynamicForm = ({ schema }: Props) => {
               key={field.id}
               field={field}
               dynamicOptions={dynamicOptions}
+              parentFields={schema.fields}
             />
           ))}
         </div>

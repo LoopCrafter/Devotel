@@ -7,9 +7,13 @@ import { GroupField } from './GroupField';
 import { NumberField } from './NumberField';
 import { CheckboxField } from './CheckboxField';
 
-type Props = { field: FormField; dynamicOptions?: Record<string, string[]> };
+type Props = {
+  field: FormField;
+  dynamicOptions?: Record<string, string[]>;
+  parentFields?: FormField[];
+};
 
-export const FieldRenderer = ({ field, dynamicOptions = {} }: Props) => {
+export const FieldRenderer = ({ field, dynamicOptions = {}, parentFields = [] }: Props) => {
   const { watch } = useFormContext();
 
   const isVisible = () => {
@@ -31,6 +35,16 @@ export const FieldRenderer = ({ field, dynamicOptions = {} }: Props) => {
   };
 
   if (!isVisible()) return null;
+
+  if (field.dynamicOptions) {
+    const dependsOnExists = parentFields.some((f) => f.id === field.dynamicOptions?.dependsOn);
+    if (!dependsOnExists) {
+      console.warn(
+        `⚠️ Field "${field.id}" depends on "${field.dynamicOptions.dependsOn}", but it is not found in the current form context.`
+      );
+      return 
+    }
+  }
 
   const selectOptions = field.dynamicOptions ? dynamicOptions[field.id] || [] : field.options || [];
 
