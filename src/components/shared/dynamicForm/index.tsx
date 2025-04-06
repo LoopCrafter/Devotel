@@ -24,7 +24,6 @@ export const DynamicForm = ({ schema }: Props) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg rounded-lg bg-white p-6 shadow-md">
-        <h2 className="mb-6 text-2xl font-bold text-gray-800">{schema.title}</h2>
         <div className="space-y-4">
           {schema.fields.map((field) => (
             <FieldRenderer

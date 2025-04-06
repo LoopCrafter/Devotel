@@ -3,7 +3,7 @@ import { Props } from "./types";
   export const InsuranceSelector = ({ options, onSelect }: Props) => {
     return (
       <div className=" p-2 mb-2 lg:mb-2 lg:p-6">
-        <h2 className="mb-6 text-2xl font-bold text-gray-800">Select Insurance Type</h2>
+        <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white">Select Insurance Type</h2>
         <div className="flex flex-col lg:flex-row gap-2">
           {options.map((option) => (
             <button
