@@ -2,6 +2,7 @@ import { FormSchema } from '@/types/form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useDynamicOptions } from '@/hooks/useDynamicOptions';
 import { FieldRenderer } from '../form-fields/FieldRenderer';
+import { submitForm } from '@/api/endpoints/forms';
 
 type Props = { schema: FormSchema };
 
@@ -14,6 +15,7 @@ export const DynamicForm = ({ schema }: Props) => {
   const onSubmit = async (data: any) => {
     try {
       console.log(`Sending Form ${schema.formId}`, data);
+      submitForm(data)
       alert('Form submitted successfully!');
     } catch (error) {
       console.error('Error submitting form:', error);
