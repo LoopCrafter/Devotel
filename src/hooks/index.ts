@@ -1,4 +1,5 @@
 export * from './useAppDispatch'
 export * from './useAppSelector'
 export * from './useFetchForm'
+export * from './useFetchApplications'
 export * from './useDynamicOptions'
