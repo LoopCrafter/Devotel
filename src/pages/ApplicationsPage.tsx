@@ -1,14 +1,14 @@
-import { Pagination, SearchBar, SortableTable } from "@/components/pages/Applications";
+import { Pagination, SearchBar, SortableTable } from "@/components/pages";
 import { useFetchApplications } from "@/hooks";
 import { ApplicationSchema } from "@/types/application";
-import { FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
 
 export const ApplicationsPage: FC = () => {
   const [search, setSearch] = useState("");
+  const [perPage, setPerPage] = useState(1)
   const [sortColumn, setSortColumn] = useState<keyof ApplicationSchema["data"][0] | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
 
   const { data, loading, error } = useFetchApplications();
   const [filteredData, setFilteredData] = useState<ApplicationSchema | undefined>(undefined);
@@ -46,18 +46,40 @@ export const ApplicationsPage: FC = () => {
     setCurrentPage(1);
   }, [search, sortColumn, sortDirection, data]);
 
+  
+  const handleChangePage = (event:ChangeEvent<HTMLSelectElement>)=>{
+    const number = event.target.value;
+    setPerPage(+number)
+    setCurrentPage(1)
+  }
+  const paginatedData = useMemo(() => {
+    return filteredData?.data.slice(
+      (currentPage - 1) * perPage,
+      currentPage * perPage
+    ) || [];
+  }, [perPage,filteredData])
+  const totalPages = filteredData ? Math.ceil(filteredData.data.length / perPage) : 0;
+
   if (loading) return <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>;
   if (error) return <p className="text-center text-red-500 dark:text-red-400">Error: {error}</p>;
 
-  const paginatedData = filteredData?.data.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  ) || [];
-  const totalPages = filteredData ? Math.ceil(filteredData.data.length / itemsPerPage) : 0;
 
   return (
     <div className="max-w-6xl mx-auto p-4">
+      <div className="flex justify-between items-center">
+
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">📋 Applications</h2>
+      <div className="text-black dark:text-white flex gap-2 items-center justify-center">
+          <label>Per Page:</label>
+          <select className="border border-black dark:border-white p-1 rounded-md" onChange={handleChangePage} value={perPage}>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>5</option>
+            <option>10</option>
+          </select>
+      </div>
+      </div>
       <SearchBar search={search} setSearch={setSearch} />
       <SortableTable
         columns={filteredData?.columns || []}

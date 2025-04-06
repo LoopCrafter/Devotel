@@ -1,5 +1,5 @@
+import { DynamicForm } from "@/components/pages";
 import { InsuranceSelector } from "@/components/shared";
-import { DynamicForm } from "@/components/shared/dynamicForm";
 import { useFetchForm } from "@/hooks/useFetchForm";
 import { FormSchema } from "@/types";
 import { FC, useMemo, useState } from "react";
