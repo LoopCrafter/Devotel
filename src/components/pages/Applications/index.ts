@@ -1,3 +1,5 @@
+export * from './Columns'
 export * from './Pagination'
+export * from './PageCounts'
 export * from './SearchBar'
 export * from './SortableTable'

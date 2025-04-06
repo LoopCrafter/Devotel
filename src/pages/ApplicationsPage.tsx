@@ -1,21 +1,43 @@
-import { Pagination, SearchBar, SortableTable } from "@/components/pages";
+import {
+  Columns,
+  PageCounts,
+  Pagination,
+  SearchBar,
+  SortableTable,
+} from "@/components/pages";
 import { useFetchApplications } from "@/hooks";
 import { ApplicationSchema } from "@/types/application";
 import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import {
+  setPerPage,
+  setSortColumn,
+  setSortDirection,
+  setVisibleColumns,
+} from "@/store/slices";
+import { Button } from "@/components/ui";
 
 export const ApplicationsPage: FC = () => {
-  const [search, setSearch] = useState("");
-  const [perPage, setPerPage] = useState(1)
-  const [sortColumn, setSortColumn] = useState<keyof ApplicationSchema["data"][0] | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useAppDispatch();
 
+  const { perPage, sortColumn, sortDirection, visibleColumns } = useAppSelector(
+    (state) => state.table
+  );
+  const [showSettings, setShowSettings] = useState(false)
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const { data, loading, error } = useFetchApplications();
-  const [filteredData, setFilteredData] = useState<ApplicationSchema | undefined>(undefined);
+  const [filteredData, setFilteredData] = useState<
+    ApplicationSchema | undefined
+  >(undefined);
 
   useEffect(() => {
     if (data) {
       setFilteredData({ ...data, data: [...data.data] });
+
+      if (visibleColumns.length === 0 && data.columns) {
+        dispatch(setVisibleColumns(data.columns));
+      }
     }
   }, [data]);
 
@@ -34,8 +56,10 @@ export const ApplicationsPage: FC = () => {
 
     if (sortColumn) {
       updatedData.sort((a, b) => {
-        const aValue = a[sortColumn];
-        const bValue = b[sortColumn];
+        const key = sortColumn as keyof typeof a;
+        const aValue = a[key];
+        const bValue = b[key];
+
         if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
         if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
         return 0;
@@ -46,55 +70,80 @@ export const ApplicationsPage: FC = () => {
     setCurrentPage(1);
   }, [search, sortColumn, sortDirection, data]);
 
-  
-  const handleChangePage = (event:ChangeEvent<HTMLSelectElement>)=>{
-    const number = event.target.value;
-    setPerPage(+number)
-    setCurrentPage(1)
-  }
+  const handleChangePage = (event: ChangeEvent<HTMLSelectElement>) => {
+    dispatch(setPerPage(+event.target.value));
+    setCurrentPage(1);
+  };
+
   const paginatedData = useMemo(() => {
-    return filteredData?.data.slice(
-      (currentPage - 1) * perPage,
-      currentPage * perPage
-    ) || [];
-  }, [perPage,filteredData])
-  const totalPages = filteredData ? Math.ceil(filteredData.data.length / perPage) : 0;
+    return (
+      filteredData?.data.slice(
+        (currentPage - 1) * perPage,
+        currentPage * perPage
+      ) || []
+    );
+  }, [perPage, filteredData, currentPage]);
 
-  if (loading) return <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>;
-  if (error) return <p className="text-center text-red-500 dark:text-red-400">Error: {error}</p>;
 
+  const handleCloseSettings = ()=>{
+    setShowSettings(false)
+  }
+
+  const totalPages = filteredData
+    ? Math.ceil(filteredData.data.length / perPage)
+    : 0;
+
+  if (loading)
+    return (
+      <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>
+    );
+
+  if (error)
+    return (
+      <p className="text-center text-red-500 dark:text-red-400">
+        Error: {error}
+      </p>
+    );
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          📋 Applications
+        </h2>
+        <PageCounts handleChangePage={handleChangePage} perPage={perPage} />
+      </div>
 
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">📋 Applications</h2>
-      <div className="text-black dark:text-white flex gap-2 items-center justify-center">
-          <label>Per Page:</label>
-          <select className="border border-black dark:border-white p-1 rounded-md" onChange={handleChangePage} value={perPage}>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>5</option>
-            <option>10</option>
-          </select>
+      {showSettings && <Columns columns={data?.columns} close={handleCloseSettings}/>}
+      <div className="flex justify-between items-center">
+        <SearchBar search={search} setSearch={setSearch} />
+        <Button onClick={()=>setShowSettings(true)}>Settings</Button>
       </div>
-      </div>
-      <SearchBar search={search} setSearch={setSearch} />
+
       <SortableTable
-        columns={filteredData?.columns || []}
-        data={paginatedData}
+        columns={
+          filteredData?.columns.filter((col) => visibleColumns.includes(col)) ||
+          []
+        }
+        data={paginatedData.map((row) =>
+          Object.fromEntries(
+            Object.entries(row).filter(([key]) => visibleColumns.includes(key))
+          )
+        )}
         sortColumn={sortColumn}
         sortDirection={sortDirection}
         onSort={(column) => {
           if (sortColumn === column) {
-            setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+            dispatch(
+              setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+            );
           } else {
-            setSortColumn(column);
-            setSortDirection("asc");
+            dispatch(setSortColumn(column));
+            dispatch(setSortDirection("asc"));
           }
         }}
       />
+
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

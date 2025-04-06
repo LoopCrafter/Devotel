@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import themeReducer from './slices/themeToggle/themeSlice'
+import tableReducer from './slices/table/tableSlice'
 
 const persistConfig = {
   key: "root",
@@ -9,7 +10,8 @@ const persistConfig = {
 };
 
 const rootReducer = {
-  theme: persistReducer(persistConfig, themeReducer)
+  theme: persistReducer(persistConfig, themeReducer),
+  table: persistReducer(persistConfig, tableReducer),
 };
 export const store = configureStore({
   reducer: rootReducer,

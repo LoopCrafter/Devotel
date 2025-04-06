@@ -1,15 +1,24 @@
 import { FC } from "react";
-import { ApplicationSchema } from "@/types/application";
+
+type RowData = {
+  [key: string]: string | number | null;
+};
 
 type Props = {
   columns: string[];
-  data: ApplicationSchema["data"];
-  sortColumn: keyof ApplicationSchema["data"][0] | null;
+  data: RowData[];
+  sortColumn: string | null;
   sortDirection: "asc" | "desc";
-  onSort: (column: keyof ApplicationSchema["data"][0]) => void;
+  onSort: (column: string) => void;
 };
 
-export const SortableTable: FC<Props> = ({ columns, data, sortColumn, sortDirection, onSort }) => {
+export const SortableTable: FC<Props> = ({
+  columns,
+  data,
+  sortColumn,
+  sortDirection,
+  onSort,
+}) => {
   return (
     <div className="overflow-auto rounded-lg shadow-md">
       <table className="min-w-full table-auto border-collapse bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -18,8 +27,8 @@ export const SortableTable: FC<Props> = ({ columns, data, sortColumn, sortDirect
             {columns.map((column) => (
               <th
                 key={column}
-                className="p-2 border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
-                onClick={() => onSort(column as keyof ApplicationSchema["data"][0])}
+                className="p-2 border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 whitespace-nowrap"
+                onClick={() => onSort(column)}
               >
                 {column}
                 <span className="ml-1">
@@ -34,13 +43,19 @@ export const SortableTable: FC<Props> = ({ columns, data, sortColumn, sortDirect
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
-            <tr key={item.id} className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <td className="p-2 border border-gray-200 dark:border-gray-700">{item["Full Name"]}</td>
-              <td className="p-2 border border-gray-200 dark:border-gray-700">{item.Age}</td>
-              <td className="p-2 border border-gray-200 dark:border-gray-700">{item.Gender}</td>
-              <td className="p-2 border border-gray-200 dark:border-gray-700">{item["Insurance Type"]}</td>
-              <td className="p-2 border border-gray-200 dark:border-gray-700">{item.City}</td>
+          {data.map((item, idx) => (
+            <tr
+              key={item.id ?? idx}
+              className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              {columns.map((col) => (
+                <td
+                  key={col}
+                  className="p-2 border border-gray-200 dark:border-gray-700 whitespace-nowrap text-center"
+                >
+                  {item[col] ?? "-"}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
