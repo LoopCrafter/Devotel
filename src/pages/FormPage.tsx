@@ -1,37 +1,18 @@
-import { FC } from "react";
+import { InsuranceSelector } from "@/components/shared";
+import { DynamicForm } from "@/components/shared/dynamicForm";
+import { useFetchForm } from "@/hooks/useFetchForm";
+import { FC, useMemo } from "react";
 
-export const FormPage:FC = () => {
+export const FormPage: FC = () => {
+  const { data } = useFetchForm();
+  const insuranceOptions = useMemo(() => data?.map(el => ({title:el.title, id:el.formId})), [data])
+
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
-    <h2 className="text-2xl font-bold dark:text-white">📝 Apply for Insurance</h2>
-
-    <form className="space-y-4">
-      <div className="flex flex-col">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
-        <input
-          type="text"
-          className="p-2 rounded border dark:bg-gray-800 dark:text-white"
-          placeholder="e.g. John Doe"
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Insurance Type</label>
-        <select className="p-2 rounded border dark:bg-gray-800 dark:text-white">
-          <option>Health</option>
-          <option>Car</option>
-          <option>Life</option>
-          <option>Home</option>
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition"
-      >
-        Submit Application
-      </button>
-    </form>
-  </div>
-  )
-}
+    <div>
+      <InsuranceSelector options={insuranceOptions || []} onSelect={()=>{}} />
+      {data?.map((form) => {
+        return <DynamicForm key={form.formId} schema={form} />;
+      })}
+    </div>
+  );
+};
